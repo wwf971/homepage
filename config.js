@@ -23,6 +23,9 @@ export const CV_PROJECTS_DISPLAY = configPrivate.CV_PROJECTS_DISPLAY || [
   'project-name-2',
   'project-name-3',
 ];
+export const EMAIL = configPrivate.EMAIL || 'example@email.com';
+export const GITHUB_URL = configPrivate.GITHUB_URL || 'https://github.com/username';
+export const GITHUB_URL_THIS_PAGE = configPrivate.GITHUB_URL_THIS_PAGE || 'https://github.com/username/homepage';
 
 // Convenience getter functions
 export const getServerUrl = () => SERVER_URL;
@@ -30,9 +33,9 @@ export const getCVProjectsDisplay = () => CV_PROJECTS_DISPLAY;
 
 // Log which config was loaded
 if (configPrivate.SERVER_URL) {
-  console.log('✅ Loaded config.0.js (private configuration)');
+  console.log('[CONFIG] Loaded config.0.js (private configuration)');
   console.log('📡 Server URL:', SERVER_URL);
 } else {
-  console.log('ℹ️ No config.0.js found, using default config.js values');
+  console.log('[CONFIG] No config.0.js found, using default config.js values');
   console.log('📡 Server URL:', SERVER_URL);
 }

@@ -16,7 +16,7 @@ import Education from '@/home/Education.jsx';
 import Motto from '@/home/Motto.jsx';
 import Footer from '@/home/Footer.jsx';
 import { useProjectsMetadataStore } from '@/project/ProjectsMetadataStore.js';
-import { ASSET_PATHS } from './config.js';
+import { ASSET_PATHS, EMAIL, GITHUB_URL } from './config.js';
 import '@/base.css';
 import './Home.css';
 
@@ -45,6 +45,18 @@ function Home() {
     <div className="home-container">
       <div className="home-content">
         <h1 className="home-title">Wei-fan Wang's Home Page</h1>
+        
+        {/* Contact Info */}
+        <div className="home-contact">
+          <a href={`mailto:${EMAIL}`} className="home-contact-link">
+            Email: {EMAIL}
+          </a>
+          <span className="home-contact-separator">•</span>
+          <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className="home-contact-link">
+            GitHub
+          </a>
+        </div>
+        
           <div>
             {/* <div className="home-intro"><FetchText url='/file/project/home/0-intro.txt' isHtml /></div> */}
 

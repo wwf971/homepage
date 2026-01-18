@@ -11,6 +11,17 @@
   font-size: 0.85em;
 }
 
+.footer-link {
+  color: #007acc;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-link:hover {
+  color: #005a9e;
+  text-decoration: underline;
+}
+
 .footer-links {
   display: flex;
   gap: 8px;

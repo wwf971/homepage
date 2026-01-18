@@ -1,4 +1,5 @@
 import React from 'react';
+import { GITHUB_URL_THIS_PAGE } from '../../config.js';
 import './Footer.css';
 
 /**
@@ -12,13 +13,27 @@ import './Footer.css';
  */
 function Footer({ 
   className = '', 
-  text = 'This website is under construction. This website is created using React.js/Zustand and flask/nginx.',
+  text = null,
   showLinks = false 
 }) {
+  const defaultContent = (
+    <>
+      This website is under construction. Created using React.js/Zustand as frontend
+      (<a 
+        href={GITHUB_URL_THIS_PAGE}
+        target="_blank" 
+        rel="noopener noreferrer"
+        className="footer-link"
+      >)
+        Source Code
+      </a> and Flask/Nginx as backend.{' '}
+    </>
+  );
+
   return (
     <div className={`footer ${className}`}>
       <span className="footer-text">
-        {text}
+        {text || defaultContent}
       </span>
       {showLinks && (
         <div className="footer-links">

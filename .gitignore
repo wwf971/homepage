@@ -1,0 +1,11 @@
+.claude
+.git
+/.git-old/
+node_modules/
+build/
+dist/
+/deploy/
+
+/setup.sh
+config.0.js
+id=*
