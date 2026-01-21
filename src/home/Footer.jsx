@@ -24,9 +24,9 @@ function Footer({
         target="_blank" 
         rel="noopener noreferrer"
         className="footer-link"
-      >)
+      >
         Source Code
-      </a> and Flask/Nginx as backend.{' '}
+      </a>) and Flask/Nginx as backend.{' '}
     </>
   );
 

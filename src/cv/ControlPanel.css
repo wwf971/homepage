@@ -112,6 +112,37 @@
   text-decoration: none;
 }
 
+/* Print button styling */
+.print-button {
+  background: #6c757d;
+  border: none;
+  border-radius: 3px;
+  padding: 6px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  width: 100%;
+  text-align: center;
+}
+
+.print-button:hover {
+  background: #5a6268;
+}
+
+.print-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(108, 117, 125, 0.25);
+}
+
+/* Hide control panel when printing */
+@media print {
+  .control-panel {
+    display: none !important;
+  }
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .control-panel {

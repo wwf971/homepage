@@ -90,8 +90,8 @@
   color: #333;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
+/* Responsive adjustments - only for screen, not print */
+@media screen and (max-width: 768px) {
   .cv-project-header {
     flex-direction: column;
     align-items: flex-start;

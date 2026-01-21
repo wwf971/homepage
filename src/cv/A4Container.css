@@ -34,10 +34,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-
-.a4-wrapper.style-pdf{
-  
-}
 /* PDF mode container - no visual styling for clean PDF */
 .a4-wrapper.style-pdf .a4-container {
   margin: 0;
@@ -73,17 +69,45 @@
 
 /* Print styles */
 @media print {
-  .a4-wrapper {
-    background-color: white;
+  /* Note: @page size is injected dynamically by ControlPanel.jsx based on actual A4 container dimensions */
+  
+  /* Force exact colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  
+  html, body {
+    width: 100%;
+    height: auto;
+    margin: 0;
     padding: 0;
   }
   
+  /* CV page - fills width, no margins */
+  .cv-page {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  
+  /* Wrapper - fills width, flows vertically */
+  .a4-wrapper {
+    display: block !important;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  
+  /* A4 container - fills width, keeps padding */
   .a4-container {
-    width: 210mm;
-    height: 297mm;
-    box-shadow: none;
-    border: none;
-    margin: 0;
-    padding: 20mm;
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 40px 60px !important;
+    box-shadow: none !important;
+    border: none !important;
   }
 }

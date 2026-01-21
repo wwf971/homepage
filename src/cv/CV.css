@@ -61,3 +61,27 @@
 .cv-contact span {
   margin: 0 4px;
 }
+
+.cv-contact a,
+.cv-contact a:visited,
+.cv-contact a:hover,
+.cv-contact a:active {
+  color: #007acc;
+  text-decoration: none;
+}
+
+/* Print styles for CV page */
+@media print {
+  .cv-page {
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+  
+  /* Ensure content doesn't break across pages */
+  .cv-content {
+    page-break-inside: avoid;
+  }
+}

@@ -49,8 +49,12 @@ const CV = () => {
           <div className="cv-header">
             <div className="cv-name">Weifan Wang</div>
             <div className="cv-contact">
-              <span>timwang194@gmail.com</span>
-              <a href="https://wwf194.myqnapcloud.com:10001/home/">https://wwf194.myqnapcloud.com:10001/home/</a>
+              <span>email: timwang194@gmail.com</span>
+              <span>github: <a href="https://github.com/wwf971">github.com/wwf971</a></span>              
+            </div>
+            <div className="cv-contact">
+              <span>homepage: <a href="https://wwf194.myqnapcloud.com:10001/home/">
+              https://wwf194.myqnapcloud.com:10001/home/</a></span>
             </div>
           </div>
           {/* Education Section */}

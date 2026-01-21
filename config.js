@@ -12,9 +12,14 @@ export const getProjectPath = (projectName) => {
   return `file_access_point/project/${projectName}/${projectName}.yaml`;
 };
 
-// Import private config - webpack will handle this at build time
-// If config.0.js doesn't exist, these will be undefined
-import * as configPrivate from './config.0.js';
+// Try to load private config, fall back to defaults if it doesn't exist
+let configPrivate = {};
+try {
+  configPrivate = await import('./config.0.js');
+  console.log('[CONFIG] Loaded config.0.js (private configuration)');
+} catch {
+  console.log('[CONFIG] No config.0.js found, using default config.js values');
+}
 
 // Export with fallback to defaults
 export const SERVER_URL = configPrivate.SERVER_URL || 'https://example.com:8000';
@@ -31,11 +36,4 @@ export const GITHUB_URL_THIS_PAGE = configPrivate.GITHUB_URL_THIS_PAGE || 'https
 export const getServerUrl = () => SERVER_URL;
 export const getCVProjectsDisplay = () => CV_PROJECTS_DISPLAY;
 
-// Log which config was loaded
-if (configPrivate.SERVER_URL) {
-  console.log('[CONFIG] Loaded config.0.js (private configuration)');
-  console.log('📡 Server URL:', SERVER_URL);
-} else {
-  console.log('[CONFIG] No config.0.js found, using default config.js values');
-  console.log('📡 Server URL:', SERVER_URL);
-}
+console.log('📡 Server URL:', SERVER_URL);
