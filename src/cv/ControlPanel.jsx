@@ -1,24 +1,37 @@
 import React, { useState, useRef } from 'react'
+import { toPng, toSvg } from 'html-to-image'
 import useCVSettings from './CVSetting.js'
 import BackToHome from '@/navi/BackToHome.jsx'
 import './ControlPanel.css'
 
-const ControlPanel = () => {
-  const { 
-    displayStyle, 
-    heightMode, 
-    toggleDisplayStyle, 
-    toggleHeightMode 
+function downloadDataUrl(dataUrl, fileName) {
+  const link = document.createElement('a')
+  link.href = dataUrl
+  link.download = fileName
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+}
+
+const ControlPanel = ({ exportRef }) => {
+  const {
+    displayStyle,
+    heightMode,
+    toggleDisplayStyle,
+    toggleHeightMode
   } = useCVSettings()
 
   const [isDragging, setIsDragging] = useState(false)
   const [position, setPosition] = useState({ x: window.innerWidth - 300, y: 20 })
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const [isExportingPng, setIsExportingPng] = useState(false)
+  const [isExportingSvg, setIsExportingSvg] = useState(false)
+  const [exportErrorMessage, setExportErrorMessage] = useState('')
   const panelRef = useRef(null)
 
   const handleMouseDown = (e) => {
-    if (e.target.closest('.control-group')) return // Don't drag when clicking buttons
-    
+    if (e.target.closest('.control-group')) return
+
     setIsDragging(true)
     const rect = panelRef.current.getBoundingClientRect()
     setDragStart({
@@ -29,7 +42,7 @@ const ControlPanel = () => {
 
   const handleMouseMove = (e) => {
     if (!isDragging) return
-    
+
     setPosition({
       x: e.clientX - dragStart.x,
       y: e.clientY - dragStart.y
@@ -40,86 +53,148 @@ const ControlPanel = () => {
     setIsDragging(false)
   }
 
-  const handlePrint = () => {
-    // Get the A4 container element
-    const a4Container = document.querySelector('.a4-container')
-    const cvContent = document.querySelector('.cv-content')
-    
-    if (!a4Container || !cvContent) {
-      console.error('A4 container or CV content not found')
+  const handleDownloadPng = async () => {
+    if (!exportRef?.current || isExportingPng || isExportingSvg) {
       return
     }
-    
-    // Temporarily apply print-like styles to measure accurate dimensions
-    const originalOverflow = a4Container.style.overflow
-    const originalHeight = a4Container.style.height
-    const originalMinHeight = a4Container.style.minHeight
-    const originalMaxHeight = a4Container.style.maxHeight
-    const originalWidth = a4Container.style.width
-    const originalMargin = a4Container.style.margin
-    
-    // Apply print styles: width 100%, no height constraints
+    setExportErrorMessage('')
+    setIsExportingPng(true)
+    try {
+      const dataUrl = await toPng(exportRef.current, {
+        cacheBust: true,
+        pixelRatio: 2,
+      })
+      downloadDataUrl(dataUrl, 'cv.png')
+    } catch {
+      setExportErrorMessage('Failed to export PNG.')
+    } finally {
+      setIsExportingPng(false)
+    }
+  }
+
+  const handleDownloadSvg = async () => {
+    if (!exportRef?.current || isExportingPng || isExportingSvg) {
+      return
+    }
+    setExportErrorMessage('')
+    setIsExportingSvg(true)
+    try {
+      const dataUrl = await toSvg(exportRef.current, {
+        cacheBust: true,
+      })
+      downloadDataUrl(dataUrl, 'cv.svg')
+    } catch {
+      setExportErrorMessage('Failed to export SVG.')
+    } finally {
+      setIsExportingSvg(false)
+    }
+  }
+
+  const prepareContainerForPrintMeasure = (a4Container) => {
+    const original = {
+      overflow: a4Container.style.overflow,
+      height: a4Container.style.height,
+      minHeight: a4Container.style.minHeight,
+      maxHeight: a4Container.style.maxHeight,
+      width: a4Container.style.width,
+      margin: a4Container.style.margin,
+    }
+
     a4Container.style.width = '100%'
     a4Container.style.margin = '0'
     a4Container.style.overflow = 'visible'
     a4Container.style.height = 'auto'
     a4Container.style.minHeight = 'auto'
     a4Container.style.maxHeight = 'none'
-    
-    // Force layout recalculation
+
     a4Container.offsetHeight
-    
-    // Get actual dimensions with print styles
+
     const rect = a4Container.getBoundingClientRect()
-    const widthPx = rect.width
-    const heightPx = rect.height
-    
-    console.log(`[Print] Measured with print styles (width 100%, no height constraints):`)
-    console.log(`[Print] Width: ${widthPx}px (${Math.ceil(widthPx * 0.264583)}mm)`)
-    console.log(`[Print] Height: ${heightPx}px (${Math.ceil(heightPx * 0.264583)}mm)`)
-    console.log(`[Print] scrollHeight: ${a4Container.scrollHeight}px, offsetHeight: ${a4Container.offsetHeight}px`)
-    
-    // Restore original styles
-    a4Container.style.width = originalWidth
-    a4Container.style.margin = originalMargin
-    a4Container.style.overflow = originalOverflow
-    a4Container.style.height = originalHeight
-    a4Container.style.minHeight = originalMinHeight
-    a4Container.style.maxHeight = originalMaxHeight
-    
-    // Convert px to mm (96 DPI standard: 1px = 0.264583mm)
-    const widthMm = Math.ceil(widthPx * 0.264583)
-    const heightMm = Math.ceil(heightPx * 0.264583)
-    
-    console.log(`[Print] PDF page size: ${widthMm}mm × ${heightMm}mm`)
-    
-    // Inject dynamic @page style
+
+    a4Container.style.width = original.width
+    a4Container.style.margin = original.margin
+    a4Container.style.overflow = original.overflow
+    a4Container.style.height = original.height
+    a4Container.style.minHeight = original.minHeight
+    a4Container.style.maxHeight = original.maxHeight
+
+    return {
+      widthMm: Math.ceil(rect.width * 0.264583),
+      heightMm: Math.ceil(rect.height * 0.264583),
+    }
+  }
+
+  const injectPrintStyle = (mode, dimensions = null) => {
     const existingStyle = document.getElementById('dynamic-print-style')
     if (existingStyle) {
       existingStyle.remove()
     }
-    
+
+    document.body.classList.remove('cv-print-continuous', 'cv-print-a4')
+    document.body.classList.add(mode === 'a4' ? 'cv-print-a4' : 'cv-print-continuous')
+
     const style = document.createElement('style')
     style.id = 'dynamic-print-style'
-    style.textContent = `
-      @media print {
-        @page {
-          size: ${widthMm}mm ${heightMm}mm;
-          margin: 0;
+
+    if (mode === 'a4') {
+      style.textContent = `
+        @media print {
+          @page {
+            size: A4;
+            margin: 0;
+          }
         }
-      }
-    `
+      `
+    } else {
+      style.textContent = `
+        @media print {
+          @page {
+            size: ${dimensions.widthMm}mm ${dimensions.heightMm}mm;
+            margin: 0;
+          }
+        }
+      `
+    }
+
     document.head.appendChild(style)
-    
-    // Trigger print
+  }
+
+  const triggerPrint = (mode) => {
+    const a4Container = exportRef?.current || document.querySelector('.a4-container')
+    if (!a4Container) {
+      return
+    }
+
+    const cleanupPrintMode = () => {
+      document.body.classList.remove('cv-print-continuous', 'cv-print-a4')
+      window.removeEventListener('afterprint', cleanupPrintMode)
+    }
+
+    window.addEventListener('afterprint', cleanupPrintMode)
+
+    if (mode === 'a4') {
+      injectPrintStyle('a4')
+    } else {
+      const dimensions = prepareContainerForPrintMeasure(a4Container)
+      injectPrintStyle('continuous', dimensions)
+    }
+
     window.print()
+  }
+
+  const handlePrint = () => {
+    triggerPrint('continuous')
+  }
+
+  const handlePrintA4 = () => {
+    triggerPrint('a4')
   }
 
   React.useEffect(() => {
     if (isDragging) {
       document.addEventListener('mousemove', handleMouseMove)
       document.addEventListener('mouseup', handleMouseUp)
-      
+
       return () => {
         document.removeEventListener('mousemove', handleMouseMove)
         document.removeEventListener('mouseup', handleMouseUp)
@@ -127,8 +202,10 @@ const ControlPanel = () => {
     }
   }, [isDragging, dragStart])
 
+  const isExporting = isExportingPng || isExportingSvg
+
   return (
-    <div 
+    <div
       ref={panelRef}
       className={`control-panel no-render ${isDragging ? 'dragging' : ''}`}
       style={{
@@ -140,17 +217,17 @@ const ControlPanel = () => {
       onMouseDown={handleMouseDown}
     >
       <div className="control-panel-header">
-        <h3 className="control-panel-title">CV Display Settings</h3>
+        <div className="control-panel-title">CV Display Settings</div>
         <div className="drag-handle">⋮⋮</div>
       </div>
-      
+
       <div className="control-group">
         <BackToHome className="control-nav-button" />
       </div>
 
       <div className="control-group">
         <label className="control-label">Display Style:</label>
-        <button 
+        <button
           className={`toggle-button ${displayStyle === 'reading' ? 'active' : ''}`}
           onClick={toggleDisplayStyle}
         >
@@ -160,7 +237,7 @@ const ControlPanel = () => {
 
       <div className="control-group">
         <label className="control-label">Page Height:</label>
-        <button 
+        <button
           className={`toggle-button ${heightMode === 'content' ? 'active' : ''}`}
           onClick={toggleHeightMode}
         >
@@ -169,12 +246,46 @@ const ControlPanel = () => {
       </div>
 
       <div className="control-group">
-        <button 
-          className="print-button"
-          onClick={handlePrint}
-        >
-          Print
-        </button>
+        <label className="control-label">Export:</label>
+        {exportErrorMessage ? (
+          <div className="control-export-error">{exportErrorMessage}</div>
+        ) : null}
+        <div className="control-export-row">
+          <button
+            className="export-button"
+            type="button"
+            onClick={handleDownloadPng}
+            disabled={isExporting}
+          >
+            {isExportingPng ? 'Exporting...' : 'PNG'}
+          </button>
+          <button
+            className="export-button"
+            type="button"
+            onClick={handleDownloadSvg}
+            disabled={isExporting}
+          >
+            {isExportingSvg ? 'Exporting...' : 'SVG'}
+          </button>
+        </div>
+        <div className="control-export-row">
+          <button
+            className="export-button export-button-print"
+            type="button"
+            onClick={handlePrint}
+            disabled={isExporting}
+          >
+            Print
+          </button>
+          <button
+            className="export-button export-button-print"
+            type="button"
+            onClick={handlePrintA4}
+            disabled={isExporting}
+          >
+            Print A4
+          </button>
+        </div>
       </div>
     </div>
   )

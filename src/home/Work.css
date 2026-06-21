@@ -1,0 +1,12 @@
+.work {
+}
+
+.work-company {
+  font-weight: bold;
+  font-size: 1.0rem;
+}
+
+.work-loading {
+  color: #666;
+  font-style: italic;
+}

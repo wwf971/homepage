@@ -3,7 +3,8 @@ export const ASSET_PATHS = {
   HOME_INTRO: 'file_access_point/project/home/0-intro.txt',
   HOME_PROJECTS: 'file_access_point/project/home/projects.yaml',
   HOME_SKILLS: 'file_access_point/project/home/1-skill.yaml',
-  HOME_EDUCATION: 'file_access_point/project/home/2-edu.yaml',
+  HOME_EDUCATION: 'file_access_point/project/home/2a-edu.yaml',
+  HOME_WORK: 'file_access_point/project/home/2b-work.yaml',
   HOME_ACTIVITY: 'file_access_point/project/home/3-activity.yaml',
 };
 

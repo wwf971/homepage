@@ -1,0 +1,19 @@
+.work-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cv-work-section-title {
+  margin-bottom: -4px;
+}
+
+.cv-work-node-wrap {
+  padding-left: 3px;
+  padding-right: 6px;
+}
+
+.cv-work-company {
+  font-weight: bold;
+  font-size: 1.0rem;
+}

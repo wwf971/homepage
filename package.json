@@ -13,7 +13,9 @@
   "license": "ISC",
   "packageManager": "pnpm@10.12.1",
   "dependencies": {
+    "@wwf971/yamd": "workspace:*",
     "axios": "^1.11.0",
+    "html-to-image": "^1.11.13",
     "immer": "^10.1.1",
     "js-yaml": "^4.1.1",
     "lodash": "^4.17.21",
@@ -21,7 +23,6 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.8.0",
-    "@wwf971/yamd": "workspace:*",
     "zustand": "^5.0.7"
   },
   "devDependencies": {

@@ -1,21 +1,22 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import ControlPanel from '@/cv/ControlPanel.jsx'
 import A4Container from '@/cv/A4Container.jsx'
 import CVEducation from '@/cv/CVEducation.jsx'
+import CVWork from '@/cv/CVWork.jsx'
 import CVProjectCard from '@/cv/CVProjectCard.jsx'
 import SkillTree from '@/home/SkillTree.jsx'
 import { useAssetStore } from '@/asset/Asset.js'
-import { ASSET_PATHS, getCVProjectsDisplay } from '../../config.js'
+import { ASSET_PATHS, getCVProjectsDisplay, EMAIL, GITHUB_URL, SERVER_URL } from '../../config.js'
 import '@/markdown-yaml/Node.css'
 import './CV.css'
 
 const CV = () => {
-  // Get data from YAML (fetched centrally in App.jsx)
+  const exportRef = useRef(null)
   const skillsAsset = useAssetStore((state) => state.assets[ASSET_PATHS.HOME_SKILLS] || null);
   const projectsAsset = useAssetStore((state) => state.assets[ASSET_PATHS.HOME_PROJECTS] || null);
 
-  // Load project display list from config (tries config.0.js first, falls back to config.js)
   const projectsDisplay = getCVProjectsDisplay();
+  const homepageUrl = `${SERVER_URL.replace(/\/$/, '')}/home/`;
 
   // Get filtered and ordered projects for display
   const getProjectsForCV = () => {
@@ -42,23 +43,22 @@ const CV = () => {
 
   return (
     <div className="cv-page">
-      <ControlPanel />
-      <A4Container>
+      <ControlPanel exportRef={exportRef} />
+      <A4Container ref={exportRef}>
         <div className="cv-content">
-          {/* Header */}
           <div className="cv-header">
             <div className="cv-name">Weifan Wang</div>
             <div className="cv-contact">
-              <span>email: timwang194@gmail.com</span>
-              <span>github: <a href="https://github.com/wwf971">github.com/wwf971</a></span>              
+              <span>email: {EMAIL}</span>
+              <span>github: {GITHUB_URL}</span>
             </div>
             <div className="cv-contact">
-              <span>homepage: <a href="https://wwf194.myqnapcloud.com:10001/home/">
-              https://wwf194.myqnapcloud.com:10001/home/</a></span>
+              <span>homepage: {homepageUrl}</span>
             </div>
           </div>
           {/* Education Section */}
           <CVEducation />
+          <CVWork />
 
           {/* Research Projects Section */}
           <div className="cv-projects-section">

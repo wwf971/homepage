@@ -13,6 +13,7 @@ import ProjectCard from '@/project/ProjectCard.jsx';
 import NodeTimeline from '@/markdown-yaml/NodeTimeline.jsx';
 import SkillTree from '@/home/SkillTree.jsx';
 import Education from '@/home/Education.jsx';
+import Work from '@/home/Work.jsx';
 import Motto from '@/home/Motto.jsx';
 import Footer from '@/home/Footer.jsx';
 import { useProjectsMetadataStore } from '@/project/ProjectsMetadataStore.js';
@@ -39,6 +40,7 @@ function Home() {
   const introAsset = useAssetStore((state) => state.assets[ASSET_PATHS.HOME_INTRO] || null);
   const skillsAsset = useAssetStore((state) => state.assets[ASSET_PATHS.HOME_SKILLS] || null);
   const eduAsset = useAssetStore((state) => state.assets[ASSET_PATHS.HOME_EDUCATION] || null);
+  const workAsset = useAssetStore((state) => state.assets[ASSET_PATHS.HOME_WORK] || null);
   const activityAsset = useAssetStore((state) => state.assets[ASSET_PATHS.HOME_ACTIVITY] || null);
 
   return (
@@ -82,6 +84,11 @@ function Home() {
         {/* Education Section */}
         <div className="home-section home-education-section">
           <Education eduAsset={eduAsset} />
+        </div>
+
+        {/* Work Section */}
+        <div className="home-section home-work-section">
+          <Work workAsset={workAsset} />
         </div>
 
         {/* Skills Section */}

@@ -110,4 +110,21 @@
     box-shadow: none !important;
     border: none !important;
   }
+
+  body.cv-print-a4 .a4-wrapper {
+    width: 210mm !important;
+  }
+
+  body.cv-print-a4 .a4-container {
+    width: 210mm !important;
+    min-height: auto !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  body.cv-print-a4 .cv-content {
+    page-break-inside: auto;
+    break-inside: auto;
+  }
 }

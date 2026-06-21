@@ -3,8 +3,8 @@ import { useServerStore } from '@/Server.js';
 
 const Server = () => {
   // Server configuration
-  const { getServerUrl, setServerUrl, getPresets, setPreset } = useServerStore();
-  const [serverUrlInput, setServerUrlInput] = useState(getServerUrl());
+  const { getServerUrl, setBackendUrl, getPresets, setPreset } = useServerStore();
+  const [serverUrlInput, setBackendUrlInput] = useState(getServerUrl());
 
   return (
     /* Server URL Configuration */
@@ -23,7 +23,7 @@ const Server = () => {
         <input 
           type="text" 
           value={serverUrlInput} 
-          onChange={(e) => setServerUrlInput(e.target.value)}
+          onChange={(e) => setBackendUrlInput(e.target.value)}
           placeholder="https://wwf194.myqnapcloud.com:10001"
           style={{ 
             flex: 1, 
@@ -33,7 +33,7 @@ const Server = () => {
           }}
         />
         <button 
-          onClick={() => setServerUrl(serverUrlInput)}
+          onClick={() => setBackendUrl(serverUrlInput)}
           style={{ 
             padding: '5px 15px', 
             backgroundColor: '#ff9800', 
@@ -54,7 +54,7 @@ const Server = () => {
             key={name}
             onClick={() => {
               setPreset(name);
-              setServerUrlInput(url);
+              setBackendUrlInput(url);
             }}
             style={{
               padding: '3px 8px',

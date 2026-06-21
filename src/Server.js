@@ -9,7 +9,7 @@ export const useServerStore = create(
     serverUrl: process.env.NODE_ENV === 'development' ? getServerUrl() : '',
     
     // Set server URL
-    setServerUrl: (url) => {
+    setBackendUrl: (url) => {
       set((state) => {
         state.serverUrl = url;
       });
@@ -50,7 +50,7 @@ export const useServerStore = create(
     setPreset: (presetName) => {
       const state = get();
       if (state.presets[presetName] !== undefined) {
-        state.setServerUrl(state.presets[presetName]);
+        state.setBackendUrl(state.presets[presetName]);
       }
     },
     

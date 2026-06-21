@@ -2,6 +2,7 @@ import React from 'react';
 import './Node.css';
 import '@/home/SkillTree.css'
 import '@/home/Education.css'
+import '@/home/Work.css'
 import NodeTimeline from './NodeTimeline.jsx';
 
 // Error Boundary Component for Node rendering
@@ -226,8 +227,18 @@ export const ListItem = React.memo(({ item, itemIndex, listStyle = 'default' }) 
             </span>
           </li>
         );
+      } else if (typeof nestedValue === 'string') {
+        const listItemClass = listStyle === 'plain' ? 'node-plain-list-item' : 'node-list-item';
+        const contentClass = listStyle === 'plain' ? 'node-plain-list-content' : 'node-ul-ol-content';
+        const { name: valueText } = parseNodeStyle(nestedValue);
+        return (
+          <li key={`${itemIndex}-${nestedKey}`} className={listItemClass}>
+            <span className={selfClass || contentClass}>
+              {nestedName}{nestedName ? ': ' : ''}{valueText}
+            </span>
+          </li>
+        );
       } else {
-        // default case - wrap in list item with title
         const listItemClass = listStyle === 'plain' ? 'node-plain-list-item' : 'node-list-item';
         const nestedListItemClass = listStyle === 'plain' ? 'node-plain-list-item node-nested-list' : 'node-list-item node-nested-list';
         const contentClass = listStyle === 'plain' ? 'node-plain-list-content' : 'node-ul-ol-content';
@@ -235,7 +246,7 @@ export const ListItem = React.memo(({ item, itemIndex, listStyle = 'default' }) 
           <li key={`${itemIndex}-${nestedKey}-title`} className={listItemClass}>
             <span className={selfClass || contentClass}>{nestedName || '\u00A0'}</span>
           </li>,
-          ...(Array.isArray(nestedValue) && nestedValue.length > 0 ? 
+          ...(Array.isArray(nestedValue) && nestedValue.length > 0 ?
             [<li key={`${itemIndex}-${nestedKey}-content`} className={nestedListItemClass}
               style={{
                 marginLeft: childStyle === 'timeline' ? '0px' : '0px',
